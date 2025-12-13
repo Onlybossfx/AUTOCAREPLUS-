@@ -135,13 +135,14 @@
             transform: scaleX(1);
         }
         
-     .log{
-               width: 12%;
-           }
-    
-        .namer{ 
+        .log {
+            width: 12%;
+        }
+        
+        .namer {
             font-size: 170%;
         }
+        
         .main-nav {
             display: flex;
             gap: 40px;
@@ -626,6 +627,83 @@
         .dot.active {
             background: var(--primary-blue);
             transform: scale(1.3);
+        }
+        
+        /* ========== BOOKING FORM SECTION (ADDED FROM SECOND CODE) ========== */
+        .booking-form {
+            background: white;
+            border-radius: 20px;
+            padding: 50px;
+            box-shadow: var(--shadow-lg);
+            max-width: 1000px;
+            margin: 0 auto;
+            animation: fadeInUp 0.8s ease-out;
+        }
+        
+        .booking-form .form-title {
+            font-size: 2rem;
+            margin-bottom: 40px;
+            color: var(--primary-dark);
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .booking-form {
+                padding: 30px;
+            }
+        }
+        
+        .booking-form .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .booking-form .form-group label {
+            font-weight: 600;
+            color: var(--primary-dark);
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .booking-form .form-group label i {
+            color: var(--primary-blue);
+            font-size: 1rem;
+        }
+        
+        .booking-form .form-group input,
+        .booking-form .form-group select {
+            padding: 16px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s;
+            background: white;
+        }
+        
+        .booking-form .form-group input:focus,
+        .booking-form .form-group select:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+            transform: translateY(-2px);
         }
         
         /* ========== ENHANCED CHAT WIDGET (FROM SECOND CODE) ========== */
@@ -1251,7 +1329,7 @@
             display: inline-block;
         }
         
-           .social-links {
+        .social-links {
             display: flex;
             gap: 15px;
             margin-top: 20px;
@@ -1261,6 +1339,7 @@
             color: white;
             font-size: 20px;
         }
+        
         .copyright {
             text-align: center;
             padding-top: 30px;
@@ -1511,6 +1590,62 @@
         </div>
     </section>
 
+    <!-- Service Booking Section (ADDED FROM SECOND CODE) -->
+    <section class="services" id="booking">
+        <div class="section-title">
+            <h2>Book Your Service</h2>
+            <p>Schedule repair, maintenance, or consultation</p>
+        </div>
+        
+        <div class="booking-form">
+            <h3 class="form-title"><i class="fas fa-calendar-alt"></i> Service Appointment</h3>
+            
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="service-type"><i class="fas fa-tools"></i> Service Type</label>
+                    <select id="service-type">
+                        <option value="">Select Service</option>
+                        <option value="oil-change">Oil Change</option>
+                        <option value="brake-repair">Brake Repair</option>
+                        <option value="engine-diagnostic">Engine Diagnostic</option>
+                        <option value="tire-rotation">Tire Rotation</option>
+                        <option value="full-service">Full Service</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="vehicle-type"><i class="fas fa-car"></i> Vehicle Type</label>
+                    <select id="vehicle-type">
+                        <option value="">Select Vehicle</option>
+                        <option value="sedan">Sedan</option>
+                        <option value="suv">SUV</option>
+                        <option value="truck">Truck</option>
+                        <option value="luxury">Luxury</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="date"><i class="fas fa-calendar"></i> Preferred Date</label>
+                    <input type="date" id="date">
+                </div>
+                
+                <div class="form-group">
+                    <label for="time"><i class="fas fa-clock"></i> Preferred Time</label>
+                    <select id="time">
+                        <option value="">Select Time</option>
+                        <option value="morning">Morning (8AM-12PM)</option>
+                        <option value="afternoon">Afternoon (12PM-4PM)</option>
+                        <option value="evening">Evening (4PM-8PM)</option>
+                    </select>
+                </div>
+            </div>
+            
+            <button class="btn btn-primary" style="width: 100%; padding: 18px; font-size: 18px; margin-top: 20px;" onclick="bookService()">
+                <i class="fas fa-calendar-check"></i> Book Appointment Now
+            </button>
+        </div>
+    </section>
+
     <!-- Enhanced Chat Widget -->
     <div class="chat-widget">
         <div class="chat-button" onclick="toggleChat()">
@@ -1713,6 +1848,11 @@
             }, 1000);
             
             initCarSlider();
+            
+            // Initialize date input for service booking
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            document.getElementById('date').min = tomorrow.toISOString().split('T')[0];
             
             // Header scroll effect
             let lastScroll = 0;
@@ -2129,6 +2269,33 @@
             document.getElementById(sectionId).scrollIntoView({
                 behavior: 'smooth'
             });
+        }
+        
+        // Service booking function (ADDED FROM SECOND CODE)
+        function bookService() {
+            const serviceType = document.getElementById('service-type').value;
+            const date = document.getElementById('date').value;
+            
+            if (!serviceType || !date) {
+                alert('Please select service type and date');
+                return;
+            }
+            
+            const button = event.target;
+            button.innerHTML = '<i class="fas fa-check"></i> Appointment Booked!';
+            button.style.background = '#10b981';
+            
+            setTimeout(() => {
+                alert('Service appointment booked successfully! We will contact you shortly to confirm.');
+                
+                document.getElementById('service-type').value = '';
+                document.getElementById('vehicle-type').value = '';
+                document.getElementById('date').value = '';
+                document.getElementById('time').value = '';
+                
+                button.innerHTML = '<i class="fas fa-calendar-check"></i> Book Another Appointment';
+                button.style.background = '';
+            }, 1500);
         }
         
         // Chat functionality
